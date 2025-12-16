@@ -1,4 +1,5 @@
 package org.testng.testng;
+
 import org.junit.jupiter.api.Assertions;
 import org.testng.annotations.Test;
 
@@ -6,13 +7,15 @@ public class TodosTest {
 
     Task task1 = new Meeting(0, "работа", "тестирование", "13.12.2025");
     Task task2 = new SimpleTask(3, "стирка");
-    String [] array = {"учеба","уборка", "хобби"};
+    Task task4 = new SimpleTask(35, "стирка");
+    String[] array = {"учеба", "уборка", "хобби"};
     Task task3 = new Epic(5, array);
+
     @Test
     public void shouldAddThreeTasksOfDifferentType() {
         SimpleTask simpleTask = new SimpleTask(5, "Позвонить родителям");
 
-        String[] subtasks = { "Молоко", "Яйца", "Хлеб" };
+        String[] subtasks = {"Молоко", "Яйца", "Хлеб"};
         Epic epic = new Epic(55, subtasks);
 
         Meeting meeting = new Meeting(
@@ -28,37 +31,46 @@ public class TodosTest {
         todos.add(epic);
         todos.add(meeting);
 
-        Task[] expected = { simpleTask, epic, meeting };
+        Task[] expected = {simpleTask, epic, meeting};
         Task[] actual = todos.findAll();
         Assertions.assertArrayEquals(expected, actual);
     }
 
-    private void Initalizator(Todos todos)
-    {
+    private void Initalizator(Todos todos) {
 
         todos.add(task1);
         todos.add(task2);
         todos.add(task3);
     }
+
     @Test
-    public void checkingSearchItemsTodos()
-    {
+    public void checkingSearchItemsTodos() {
         Todos todos = new Todos();
         Initalizator(todos);
-        String []result;
+        String[] result;
         Task[] resultSearch = todos.search("хобби");
         Task[] expected = {task3};
         Assertions.assertArrayEquals(expected, resultSearch);
     }
 
     @Test
-    public void checkingSearchItemsTodosNegative()
-    {
+    public void checkingSearchItemsTodosNegative() {
         Todos todos = new Todos();
         Initalizator(todos);
-        String []result;
+        String[] result;
         Task[] resultSearch = todos.search("отдых");
         Task[] expected = {};
+        Assertions.assertArrayEquals(expected, resultSearch);
+    }
+
+    @Test
+    public void checkingWhenNoSaskSuitableInTheSearchMethod() {
+        Todos todos = new Todos();
+        Initalizator(todos);
+        todos.add(task4);
+        String[] result;
+        Task[] resultSearch = todos.search("стирка");
+        Task[] expected = {task2, task4};
         Assertions.assertArrayEquals(expected, resultSearch);
     }
 }
